@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz App</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        text-align: center;
+        margin: 20px;
+      }
+
+      #quiz-container {
+        max-width: 600px;
+        margin: auto;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .question {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .choices {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      input[type="radio"] {
+        margin-left: 90%;
+      }
+
+      #result {
+        margin-top: 20px;
+        font-weight: bold;
+        white-space: pre-line;
+      }
+      button {
+        margin-top: 10px;
+        padding: 17px 40px;
+        border-radius: 50px;
+        cursor: pointer;
+        border: 1px solid black;
+        background-color: white;
+        box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-size: 15px;
+        transition: all 0.5s ease;
+      }
+
+      button:hover {
+        letter-spacing: 3px;
+        background-color: hsl(261deg 80% 48%);
+        color: hsl(0, 0%, 100%);
+        box-shadow: rgb(93 24 220) 0px 7px 29px 0px;
+      }
+
+      button:active {
+        letter-spacing: 3px;
+        background-color: hsl(261deg 80% 48%);
+        color: hsl(0, 0%, 100%);
+        box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
+        transform: translateY(10px);
+        transition: 100ms;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Quiz About Ali</h1>
+    <div id="quiz-container">
+      <div id="question"></div>
+      <div id="choices" class="choices"></div>
+      <button onclick="submitAnswer()">Submit Answer</button>
+      <div id="result"></div>
+    </div>
+
+    <script>
+      const question = [
+        "1: How old is Ali?",
+        "2: Is the earth flat?",
+        "3: Who is Ali?",
+        "4: In which department does Ali study",
+      ];
+
+      const choices = [
+        [
+          "A: 15 Years Old",
+          "B: 18 Years Old",
+          "C: 20 Years Old",
+          "D: 35 Years Old",
+        ],
+        ["A: Yes", "B: No", "C: Nothing", "D: All of the above"],
+        ["A: Young Boy", "B: Old Boy", "C: Boy", "D: None of these"],
+        ["A: In BSCS", "B: In BSSE", "C: In BSCE", "D: In BSIOT"],
+      ];
+
+      const key = ["B", "B", "A", "A"];
+      let currentQuestion = 0;
+      let score = 0;
+
+      function displayQuestion() {
+        const questionElement = document.getElementById("question");
+        const choicesElement = document.getElementById("choices");
+
+        questionElement.textContent = question[currentQuestion];
+
+        choicesElement.innerHTML = "";
+        choices[currentQuestion].forEach((choice, index) => {
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = "answer";
+          input.value = String.fromCharCode(65 + index);
+          input.required = true;
+
+          const label = document.createElement("label");
+          label.textContent = choice;
+
+          choicesElement.appendChild(input);
+          choicesElement.appendChild(label);
+          choicesElement.appendChild(document.createElement("br"));
+        });
+      }
+
+      function submitAnswer() {
+        const selectedAnswer = document.querySelector(
+          'input[name="answer"]:checked'
+        );
+
+        if (selectedAnswer) {
+          if (selectedAnswer.value === key[currentQuestion]) {
+            score++;
+          }
+
+          currentQuestion++;
+
+          if (currentQuestion < question.length) {
+            displayQuestion();
+          } else {
+            displayResult();
+          }
+        } else {
+          alert("Please select an answer.");
+        }
+      }
+
+      function displayResult() {
+        const resultElement = document.getElementById("result");
+        resultElement.textContent = `
+            Total Number of Questions: ${question.length} 
+            Correct Number of Questions: ${score}
+            Your percentage: ${(score / question.length) * 100}%
+            `;
+        if ((score / question.length) * 100 >= 50) {
+          let good = new Audio("Yeah.mpeg");
+          good.play();
+        } else {
+          let bad = new Audio("Really.mp3");
+          bad.play();
+        }
+      }
+      displayQuestion();
+    </script>
+  </body>
+</html>
